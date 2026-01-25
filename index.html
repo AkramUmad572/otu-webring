@@ -4,36 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTU Webring</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="particles-canvas"></canvas>
+    <div class="noise-overlay"></div>
+    <canvas id="ring-canvas"></canvas>
+
     <div class="container">
-        <header>
-            <div class="logo">
-                <img src="assets/otuLogo.png" alt="OntarioTech University Logo" class="logo-icon">
+        <header class="header">
+            <div class="logo-mark">
+                <img src="assets/otuLogo.png" alt="Ontario Tech University" class="logo-img">
             </div>
+            <h1 class="title">
+                <span class="title-line title-line-1">WEBRING</span>
+            </h1>
+            <p class="tagline">A constellation of talent from Ontario Tech University</p>
         </header>
 
-        <div class="search-container">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input type="text" id="searchInput" placeholder="search by name or year" autocomplete="off">
+        <div class="search-wrapper">
+            <div class="search-container">
+                <div class="search-bar">
+                    <span class="search-prefix">&gt;</span>
+                    <input type="text" id="searchInput" placeholder="search members..." autocomplete="off" spellcheck="false">
+                    <kbd class="search-hint">
+                        <span class="kbd-key">&#8984;</span>
+                        <span class="kbd-key">K</span>
+                    </kbd>
+                </div>
+            </div>
         </div>
 
-        <div class="sites-container">
-            <div id="sitesList" class="sites-list"></div>
-        </div>
+        <main class="main-content">
+            <div class="stats-bar">
+                <div class="stat">
+                    <span class="stat-number" id="memberCount">0</span>
+                    <span class="stat-label">MEMBERS</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number" id="companyCount">0</span>
+                    <span class="stat-label">COMPANIES</span>
+                </div>
+            </div>
+
+            <div class="sites-container">
+                <div id="sitesList" class="sites-grid"></div>
+            </div>
+        </main>
+
+        <section class="join-section">
+            <h2 class="join-title">JOIN THE RING</h2>
+            <p class="join-text">Are you an Ontario Tech student or alumni with a personal website?</p>
+            <a href="https://github.com/your-repo/otu-webring" target="_blank" rel="noopener noreferrer" class="join-button">
+                <span class="join-button-text">Submit PR on GitHub</span>
+                <svg class="join-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 17L17 7M17 7H7M17 7V17"/>
+                </svg>
+            </a>
+        </section>
     </div>
 
-    <footer>
-        <p>Talent within Ontario Tech University 🎓</p>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-nav">
+                <a href="#" class="footer-link">Previous</a>
+                <span class="footer-divider">/</span>
+                <a href="#" class="footer-link">Random</a>
+                <span class="footer-divider">/</span>
+                <a href="#" class="footer-link">Next</a>
+            </div>
+            <p class="footer-credit">Built by OTU students</p>
+        </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
     <script src="js/sites.js"></script>
-    <script src="js/particles.js"></script>
+    <script src="js/ring.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

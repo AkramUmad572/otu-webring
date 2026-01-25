@@ -1,115 +1,214 @@
-// Filter and display sites based on search input
-function filterSites() {
-    const searchInput = document.getElementById('searchInput');
-    const sitesList = document.getElementById('sitesList');
-    const searchTerm = searchInput.value.toLowerCase().trim();
+// OTU Webring - Main Application
+// Using Fuse.js for fuzzy search (inspired by SE-Webring)
 
-    // Clear existing list
-    sitesList.innerHTML = '';
+let fuse;
 
-    // Filter sites
-    const filteredSites = allSites.filter(site => {
-        const nameMatch = site.name.toLowerCase().includes(searchTerm);
-        const websiteMatch = site.website.toLowerCase().includes(searchTerm);
-        const yearMatch = site.year.toString().includes(searchTerm);
-        return nameMatch || websiteMatch || yearMatch;
+// Initialize Fuse.js for fuzzy search
+function initFuseSearch() {
+    const options = {
+        keys: [
+            { name: 'name', weight: 0.5 },
+            { name: 'year', weight: 0.2 },
+            { name: 'website', weight: 0.1 },
+            { name: 'internships.company', weight: 0.2 }
+        ],
+        threshold: 0.4,
+        includeScore: true,
+        ignoreLocation: true
+    };
+    fuse = new Fuse(allSites, options);
+}
+
+// Calculate stats
+function updateStats() {
+    const memberCount = document.getElementById('memberCount');
+    const companyCount = document.getElementById('companyCount');
+
+    // Count unique companies
+    const companies = new Set();
+    allSites.forEach(site => {
+        if (site.internships) {
+            site.internships.forEach(internship => {
+                companies.add(internship.company);
+            });
+        }
     });
 
-    // Display filtered sites or empty state
-    if (filteredSites.length === 0 && searchTerm !== '') {
-        sitesList.innerHTML = '<div class="empty-state">No sites found matching your search.</div>';
-    } else if (filteredSites.length === 0) {
-        sitesList.innerHTML = '<div class="empty-state">No sites available.</div>';
-    } else {
-        filteredSites.forEach(site => {
-            const siteWrapper = document.createElement('div');
-            siteWrapper.className = 'site-wrapper';
-            
-            const siteItem = document.createElement('div');
-            siteItem.className = 'site-item';
-            
-            const nameDiv = document.createElement('div');
-            nameDiv.className = 'site-name';
-            nameDiv.textContent = site.name.toUpperCase();
-            
-            const yearDiv = document.createElement('div');
-            yearDiv.className = 'site-year';
-            yearDiv.textContent = site.year;
-            
-            const linkDiv = document.createElement('div');
-            linkDiv.className = 'site-link-container';
-            
-            const link = document.createElement('a');
-            link.className = 'site-link';
-            link.href = site.website;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            const websiteText = site.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
-            link.textContent = websiteText.toLowerCase();
-            
-            const dropdownBtn = document.createElement('button');
-            dropdownBtn.className = 'dropdown-btn';
-            dropdownBtn.innerHTML = '▼';
-            dropdownBtn.setAttribute('aria-label', 'Toggle details');
-            
-            linkDiv.appendChild(link);
-            linkDiv.appendChild(dropdownBtn);
-            
-            siteItem.appendChild(nameDiv);
-            siteItem.appendChild(yearDiv);
-            siteItem.appendChild(linkDiv);
-            
-            // Dropdown content
-            const dropdownContent = document.createElement('div');
-            dropdownContent.className = 'dropdown-content';
-            
-            // Only show dropdown if there are internships
-            if (site.internships && site.internships.length > 0) {
-                // Display all internships
-                site.internships.forEach(internship => {
-                    const internshipDiv = document.createElement('div');
-                    internshipDiv.className = 'internship-item';
-                    internshipDiv.innerHTML = `
-                        <strong>${internship.company}</strong> - ${internship.role}<br>
-                        <span class="internship-period">${internship.period}</span>
-                    `;
-                    dropdownContent.appendChild(internshipDiv);
-                });
-            } else {
-                // Hide dropdown button if no internships
-                dropdownBtn.style.display = 'none';
-            }
-            
-            // Toggle dropdown
-            dropdownBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                siteWrapper.classList.toggle('expanded');
-                dropdownBtn.innerHTML = siteWrapper.classList.contains('expanded') ? '▲' : '▼';
-            });
-            
-            siteWrapper.appendChild(siteItem);
-            siteWrapper.appendChild(dropdownContent);
-            sitesList.appendChild(siteWrapper);
-        });
+    // Animate count up
+    animateCount(memberCount, allSites.length);
+    animateCount(companyCount, companies.size);
+}
+
+// Animate number counting
+function animateCount(element, target) {
+    const duration = 1000;
+    const start = 0;
+    const startTime = performance.now();
+
+    function update(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Ease out cubic
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const current = Math.floor(start + (target - start) * easeOut);
+
+        element.textContent = current;
+
+        if (progress < 1) {
+            requestAnimationFrame(update);
+        }
     }
+
+    requestAnimationFrame(update);
+}
+
+// Create site card HTML
+function createSiteCard(site, index) {
+    const card = document.createElement('article');
+    card.className = 'site-card';
+    card.style.animationDelay = `${0.4 + index * 0.08}s`;
+
+    const websiteText = site.website.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+    let internshipsHTML = '';
+    if (site.internships && site.internships.length > 0) {
+        internshipsHTML = `
+            <div class="site-internships">
+                ${site.internships.map(internship => `
+                    <span class="internship-tag">
+                        <span class="internship-dot"></span>
+                        ${internship.company}
+                    </span>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    card.innerHTML = `
+        <div class="site-card-header">
+            <h3 class="site-name">${site.name}</h3>
+            <span class="site-year">${site.year}</span>
+        </div>
+        <a href="${site.website}" target="_blank" rel="noopener noreferrer" class="site-link">
+            ${websiteText}
+            <svg class="site-link-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 17L17 7M17 7H7M17 7V17"/>
+            </svg>
+        </a>
+        ${internshipsHTML}
+    `;
+
+    // Click on card (not link) opens website
+    card.addEventListener('click', (e) => {
+        if (e.target.tagName !== 'A' && !e.target.closest('a')) {
+            window.open(site.website, '_blank', 'noopener,noreferrer');
+        }
+    });
+
+    return card;
+}
+
+// Display sites
+function displaySites(sites) {
+    const sitesList = document.getElementById('sitesList');
+    sitesList.innerHTML = '';
+
+    if (sites.length === 0) {
+        sitesList.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">:/</div>
+                <p class="empty-state-text">No members found matching your search</p>
+            </div>
+        `;
+        return;
+    }
+
+    sites.forEach((site, index) => {
+        const card = createSiteCard(site, index);
+        sitesList.appendChild(card);
+    });
+}
+
+// Filter sites based on search input
+function filterSites() {
+    const searchInput = document.getElementById('searchInput');
+    const searchTerm = searchInput.value.trim();
+
+    if (searchTerm === '') {
+        displaySites(allSites);
+        return;
+    }
+
+    const results = fuse.search(searchTerm);
+    const filteredSites = results.map(result => result.item);
+    displaySites(filteredSites);
+}
+
+// Webring navigation
+function setupWebringNavigation() {
+    const footerLinks = document.querySelectorAll('.footer-link');
+
+    footerLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const action = link.textContent.toLowerCase();
+
+            // Get current site from URL or default to index
+            let currentIndex = 0;
+
+            if (action === 'random') {
+                currentIndex = Math.floor(Math.random() * allSites.length);
+            } else if (action === 'previous') {
+                currentIndex = (currentIndex - 1 + allSites.length) % allSites.length;
+            } else if (action === 'next') {
+                currentIndex = (currentIndex + 1) % allSites.length;
+            }
+
+            const site = allSites[currentIndex];
+            if (site) {
+                window.open(site.website, '_blank', 'noopener,noreferrer');
+            }
+        });
+    });
 }
 
 // Initialize the page
 document.addEventListener('DOMContentLoaded', () => {
     const searchInput = document.getElementById('searchInput');
-    
+
+    // Initialize fuzzy search
+    initFuseSearch();
+
     // Display all sites on load
-    filterSites();
-    
-    // Add event listener for search
-    searchInput.addEventListener('input', filterSites);
-    
+    displaySites(allSites);
+
+    // Update stats
+    updateStats();
+
+    // Setup webring navigation
+    setupWebringNavigation();
+
+    // Add event listener for search with debounce
+    let debounceTimer;
+    searchInput.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(filterSites, 150);
+    });
+
     // Add keyboard shortcut (Cmd/Ctrl + K) to focus search
     document.addEventListener('keydown', (e) => {
         if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
             e.preventDefault();
             searchInput.focus();
+            searchInput.select();
+        }
+
+        // Escape to clear search
+        if (e.key === 'Escape' && document.activeElement === searchInput) {
+            searchInput.value = '';
+            filterSites();
+            searchInput.blur();
         }
     });
 });
