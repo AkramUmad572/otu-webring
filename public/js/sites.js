@@ -8,7 +8,13 @@ const sites = [
 
 // Helper to normalize URLs for comparison
 function normalizeUrl(url) {
-    return url.replace(/^https?:\/\//, '').replace(/\/$/, '').toLowerCase();
+    if (!url) return '';
+    // Remove protocol, www. prefix, trailing slashes, and lowercase
+    return url
+        .replace(/^https?:\/\//, '')
+        .replace(/^www\./, '')
+        .replace(/\/$/, '')
+        .toLowerCase();
 }
 
 // Find site index by URL
