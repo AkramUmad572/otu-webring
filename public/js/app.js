@@ -38,7 +38,7 @@ function getFilteredSites() {
         filtered = filtered.filter(site =>
             site.name.toLowerCase().includes(searchQuery) ||
             site.url.toLowerCase().includes(searchQuery) ||
-            (site.desc && site.desc.toLowerCase().includes(searchQuery))
+            (site.recent_internship && site.recent_internship.toLowerCase().includes(searchQuery))
         );
     }
 
@@ -68,7 +68,7 @@ function renderSitesList() {
         const li = document.createElement('li');
         const displayUrl = site.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
         const yearDisplay = site.year ? `<span class="year">'${String(site.year).slice(-2)}</span>` : '';
-        const descDisplay = site.desc ? `<span class="desc">${site.desc}</span>` : '';
+        const descDisplay = site.recent_internship ? `<span class="desc">${site.recent_internship}</span>` : '';
 
         li.innerHTML = `
             <a href="${site.url}" target="_blank" rel="noopener">

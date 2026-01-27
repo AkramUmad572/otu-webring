@@ -1,9 +1,9 @@
 // Site data
 const sites = [
-    { name: "Vincent Wong", url: "https://vinceklwong.com", year: 2027, desc: "Software Engineer" },
-    { name: "Shams Haroon", url: "https://shamsharoon.com", year: 2027, desc: "Software Engineer" },
-    { name: "Julian Cruzet", url: "https://juliancruzet.ca", year: 2026, desc: "Software Engineer" },
-    { name: "Jon McKesey", url: "https://jonathanmckesey.com/", year: 2027, desc: "Software Engineer" }
+    { name: "Vincent Wong", url: "https://vinceklwong.com", year: 2027, recent_internship: "Fidelity Investments" },
+    { name: "Shams Haroon", url: "https://shamsharoon.com", year: 2027, recent_internship: "Wealthsimple" },
+    { name: "Julian Cruzet", url: "https://juliancruzet.ca", year: 2027, recent_internship: "Royal Bank of Canada" },
+    { name: "Jon McKesey", url: "https://jonathanmckesey.com/", year: 2027, recent_internship: "Verily" }
 ];
 
 // Helper to normalize URLs for comparison
