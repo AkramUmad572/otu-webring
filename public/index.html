@@ -12,52 +12,36 @@
 <body>
     <div class="container">
         <header>
-            <img src="assets/otuLogo.png" alt="Ontario Tech University" class="logo">
             <h1>OTU Webring</h1>
-            <p class="tagline">A ring of personal sites from Ontario Tech students</p>
+            <p class="desc">A <a href="https://en.wikipedia.org/wiki/Webring" target="_blank" rel="noopener">webring</a> connecting personal sites from the talent @ Ontario Tech University. Discover portfolios, blogs, and projects from the community.</p>
         </header>
+
+        <div class="controls">
+            <input type="text" id="search" placeholder="Search" autocomplete="off">
+            <div class="filters">
+                <button data-sort="default" class="active">Default</button>
+                <button data-sort="alpha">A-Z</button>
+                <button data-sort="year">Year</button>
+            </div>
+        </div>
 
         <main>
             <ul id="sites" class="sites-list"></ul>
         </main>
 
-        <section class="join">
-            <h2>Join the Ring</h2>
-            <p>Add your site to <code>js/sites.js</code> and submit a PR.</p>
-            <a href="https://github.com/VinceKLW/otu-webring" target="_blank" rel="noopener">GitHub Repo</a>
-        </section>
-
+        <footer>
+            <div class="ring-nav">
+                <a href="prev.html" id="widget-prev">← Prev</a>
+                <span class="divider">/</span>
+                <a href="next.html" id="widget-next">Next →</a>
+            </div>
+            <a href="https://github.com/VinceKLW/otu-webring" target="_blank" rel="noopener">Join Here →</a>
+        </footer>
     </div>
-
-    <footer>
-        <!-- Webring Widget -->
-        <div id="webring-widget" style="display: flex; align-items: center; justify-content: center; gap: 16px;">
-            <a href="prev.html?from=" id="widget-prev" style="color: #71717a; text-decoration: none; font-size: 16px;">←</a>
-            <a href="/" target="_blank" rel="noopener noreferrer" style="display: flex; align-items: center;">
-                <img src="assets/ontariotech.svg" alt="OTU Webring" style="height: 20px; width: auto; opacity: 0.7;">
-            </a>
-            <a href="next.html?from=" id="widget-next" style="color: #71717a; text-decoration: none; font-size: 16px;">→</a>
-        </div>
-    </footer>
 
     <script src="js/sites.js"></script>
     <script src="js/tracking.js"></script>
     <script src="js/app.js"></script>
-    <script>
-        // Update widget links with current page URL
-        document.addEventListener('DOMContentLoaded', () => {
-            const currentUrl = window.location.origin + window.location.pathname;
-            const prevLink = document.getElementById('widget-prev');
-            const nextLink = document.getElementById('widget-next');
-            
-            if (prevLink) {
-                prevLink.href = `prev.html?from=${encodeURIComponent(currentUrl)}`;
-            }
-            if (nextLink) {
-                nextLink.href = `next.html?from=${encodeURIComponent(currentUrl)}`;
-            }
-        });
-    </script>
     <!-- Vercel Web Analytics - Enable in Vercel Dashboard under Analytics -->
     <!-- This will automatically track page views -->
 </body>
