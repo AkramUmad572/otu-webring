@@ -1,9 +1,10 @@
 // Site data
 const sites = [
-    { name: "Vincent Wong", url: "https://vinceklwong.com", year: 2027, recent_internship: "Fidelity Investments" },
-    { name: "Shams Haroon", url: "https://shamsharoon.com", year: 2027, recent_internship: "Wealthsimple" },
-    { name: "Julian Cruzet", url: "https://juliancruzet.ca", year: 2027, recent_internship: "Royal Bank of Canada" },
-    { name: "Jon McKesey", url: "https://jonathanmckesey.com/", year: 2027, recent_internship: "Verily" }
+    { name: "Vincent Wong", url: "https://vinceklwong.com" },
+    { name: "Shams Haroon", url: "https://shamsharoon.com" },
+    { name: "Julian Cruzet", url: "https://juliancruzet.ca" },
+    { name: "Jon McKesey", url: "https://jonathanmckesey.com/" },
+    { name: "Jun Bin Cheng", url: "https://jb-cheng.github.io/" }
 ];
 
 // YOU CAN ADD RECENT_INTERNSHIP OR GENERAL DESCRIPTION! (ex. Software Engineer, Full-Stack Developer, etc.)
