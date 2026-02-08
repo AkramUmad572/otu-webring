@@ -7,6 +7,8 @@ const sites = [
     { name: "Jun Bin Cheng", url: "https://jb-cheng.github.io/" }
 ];
 
+// YOU CAN ADD RECENT_INTERNSHIP OR GENERAL DESCRIPTION! (ex. Software Engineer, Full-Stack Developer, etc.)
+
 // Helper to normalize URLs for comparison
 function normalizeUrl(url) {
     if (!url) return '';
